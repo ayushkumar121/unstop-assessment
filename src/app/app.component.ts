@@ -38,10 +38,10 @@ export class AppComponent {
   bookSeats(seatCount: number) {
     this.resetError();
 
-    // if (seatCount < 1 || seatCount > 7) {
-    //   this.setError('Cannot book more than 7 and less 1 seat at a time');
-    //   return;
-    // }
+     if (seatCount < 1 || seatCount > 7) {
+      this.setError('Cannot book more than 7 and less 1 seat at a time');
+      return;
+    }
 
     if (seatCount + this.seatsBooked > this.seats.length) {
       this.setError('Cannot book more than coach capaity');
