@@ -1,38 +1,68 @@
-* {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+main .logo {
+    width: 100px;
 }
 
-.coach {
+main {
+    max-width: 500px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border: 1px solid rgb(75, 82, 85);
+    box-shadow: 0 2px 5px #0000001a;
+    border-radius: 8px;
+    padding: 15px;
+    background: #fff;
 }
 
+main button, input {
+    outline: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin: 5px;
+}
+
+main input {
+    border: 1px solid rgb(75, 82, 85);
+}
+
+main button {
+    border: 1px solid rgb(0, 93, 186);
+    background: rgb(0, 92, 184);
+    box-shadow: rgba(18, 88, 178, 0.4) 0px 4px 10px;
+    color: #fff;
+}
 .coach .row {
     display: flex;
 }
 
 .coach .seat {
   margin: 2px;
-  border: 1px solid #666;
-  font-size: 12px;
-  padding: 2px;
-  display: block;
-  width: 20px;
-  height: 20px;
-}
-
-.seat-numbers {
-  font-size: 14px;
 }
 
 .seat span {
+   color: #666;
+  font-size: 14px;
   width: 100%;
   height: 100%;
   display: block;
   background: unset;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px #0000001a;
+  border: 1px solid rgb(75, 82, 85);
 }
 
 .seat .booked{
-  background: red;
+  color: #fff;
+  background: #dc483c;
+}
+
+.seat .recently-booked{
+  color: #fff;
+  background: green;
 }
 
 .error {

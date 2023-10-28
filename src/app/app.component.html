@@ -1,25 +1,29 @@
-<p>Enter the number of seats you want to book</p>
+<main>
+    <img class="logo" src="./assets/unstop-logo.svg" alt="logo" />
+    <h1>Booking system</h1>
+    <p>Enter the number of seats you want to book</p>
 
-<div class="booking-form">
-  <input type="number" [(ngModel)]="seatCount" />
-  <button (click)="bookSeats(seatCount)">Book</button>
-  <p class="error" *ngIf="error != ''">Error: {{ error }}</p>
-  <p class="seat-numbers">Recently Booked: {{ recentlyBooked }}</p>
-</div>
-
-<div class="seat-status">
-  <p>Seat booking Status</p>
-  <div class="coach">
-    <div *ngFor="let row of coach.rows; let i = index" class="row">
-	<div *ngFor="let f of [].constructor(row.totalSeats); let j = index" class="seat">
-    		<span
-		[ngClass]="{
-		'booked': (j+1) <= row.totalSeats - row.emptySeats
-		}"
-    		>{{i * coach.rows[0].totalSeats + j}}
-    		</span>
+	<div class="booking-form">
+	  <input type="number" [(ngModel)]="seatCount" />
+	  <button (click)="bookSeats(seatCount)">Book</button>
+	  <p class="error" *ngIf="error != ''">Error: {{ error }}</p>
+	  <p class="seat-numbers">Recently Booked: {{ recentlyBooked }}</p>
 	</div>
-    </div>
-  </div>
-</div>
-
+	
+	<div class="seat-status">
+	  <p>Seat booking Status</p>
+	  <div class="coach">
+	    <div *ngFor="let row of coach.rows; let i = index" class="row">
+		<div *ngFor="let f of [].constructor(row.totalSeats); let j = index" class="seat">
+	    		<span
+			[ngClass]="{
+			'recently-booked': isRecentlyBooked(i * coach.rows[0].totalSeats + j),
+			'booked': (j+1) <= row.totalSeats - row.emptySeats
+			}"
+	    		>{{i * coach.rows[0].totalSeats + j}}
+	    		</span>
+		</div>
+	    </div>
+	  </div>
+	</div>
+</main>

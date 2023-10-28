@@ -33,6 +33,10 @@ export class AppComponent {
     this.error = '';
   }
 
+  isRecentlyBooked(seatNumber: number): boolean {
+     return this.recentlyBooked.findIndex(x => x === seatNumber) != -1; 
+  }
+
   /* 
   * Given rows this funtion returs the sum of 
   * distances between them
