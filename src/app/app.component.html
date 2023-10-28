@@ -4,14 +4,11 @@
   <input type="number" [(ngModel)]="seatCount" />
   <button (click)="bookSeats(seatCount)">Book</button>
   <p class="error" *ngIf="error != ''">Error: {{ error }}</p>
+  <p class="seat-numbers">Recently Booked: {{ recentlyBooked }}</p>
 </div>
 
 <div class="seat-status">
   <p>Seat booking Status</p>
-  <p class="seat-status-legend">
-    <span class="green"></span> Recently Booked
-    <span class="red"></span> Previously Booked
-  </p>
   <div class="coach">
     <div *ngFor="let row of coach.rows; let i = index" class="row">
 	<div *ngFor="let f of [].constructor(row.totalSeats); let j = index" class="seat">
@@ -19,7 +16,7 @@
 		[ngClass]="{
 		'booked': (j+1) <= row.totalSeats - row.emptySeats
 		}"
-    		>{{i * row.totalSeats + j}}
+    		>{{i * coach.rows[0].totalSeats + j}}
     		</span>
 	</div>
     </div>

@@ -10,17 +10,14 @@ import { Component } from '@angular/core';
 export class AppComponent {
   error = '';
   seatCount = 0;
-  seatsBooked = 0;
+  seatsBookedCount = 0;
   coach = new Coach(80, 7);
-  //recentlyBooked: number[] = [];
+  recentlyBooked: number[] = [];
 
   constructor() {	
       this.bookSeats(5);
       this.bookSeats(7);
       this.bookSeats(6);
-      this.bookSeats(7);
-      this.bookSeats(7);
-      this.bookSeats(7);
       this.bookSeats(7);
       this.bookSeats(7);
       this.bookSeats(5);
@@ -54,22 +51,22 @@ export class AppComponent {
   also returns the seat numbers of seat
   booked
   */
-  bookSeats(seatCount: number): number[] {
+  bookSeats(seatCount: number) {
     this.resetError();
 
      if (seatCount < 1 || seatCount > 7) {
       this.setError('Cannot book more than 7 and less 1 seat at a time');
-      return [];
+      return;
     }
 
-     if (this.seatsBooked + seatCount > this.coach.totalSeatCount) {
+     if (this.seatsBookedCount + seatCount > this.coach.totalSeatCount) {
       this.setError('Not enought seats are available');
-      return [];
+      return;
     }
 
     /* Find seats in a row*/
-    
-    let bestRow = -1;
+    let maxColumns = this.coach.rows[0].totalSeats; 
+    let bestRowIndex = -1;
     let minCost = Number.POSITIVE_INFINITY;
 
     for (let i=0; i<this.coach.rows.length; i++) {
@@ -78,7 +75,7 @@ export class AppComponent {
 	
 	if (cost >= 0 && cost < minCost) {
     		minCost = cost;
-    		bestRow = i;
+    		bestRowIndex = i;
 	}
     }
 
@@ -86,10 +83,20 @@ export class AppComponent {
     * Filling up in base case ie. we have a single
     * row free 
     * */
-    if (bestRow != -1) {
-        this.seatsBooked += seatCount;
-    	this.coach.rows[bestRow].emptySeats -= seatCount;
-    	return [bestRow];
+    if (bestRowIndex != -1) {
+    	let bookedSeats = [];
+    	let bestRow = this.coach.rows[bestRowIndex];
+    	let filledSeats = bestRow.totalSeats - bestRow.emptySeats;
+
+        /* Figuring out seat numbers*/
+    	for (let i=0; i<seatCount; i++) {
+		bookedSeats.push(bestRowIndex*maxColumns + i+filledSeats);
+    	}
+    	
+    	this.recentlyBooked = bookedSeats;
+        this.seatsBookedCount += seatCount;
+    	bestRow.emptySeats -= seatCount;
+    	return;
     }
 
    /* 
@@ -97,43 +104,55 @@ export class AppComponent {
    * seats available in a row 
    * */
 
-    let bookedSoFar = 0;
-    let rows: number[] = [];
     let bestRows: number[] = [];
-    
     minCost = Number.POSITIVE_INFINITY;
 
-    for (let i=0; i<this.coach.rows.length; i++) {
-	let row = this.coach.rows[i];
-	if (row.emptySeats == 0) continue;
+    for (let i=0; i<this.coach.rows.length; i++) { 
+    	let bookedSoFar = 0;
+    	let rows: number[] = [];
+    
+    	for (let j=i; j<this.coach.rows.length; j++) {
+		let row = this.coach.rows[j];
+		if (row.emptySeats == 0) continue;
 
-	rows.push(i);
-	bookedSoFar += row.emptySeats;
-
-	if (bookedSoFar >= seatCount) {
-    		let cost = this.getRowCost(rows);
-		if (cost < minCost) {
-    			bestRows = rows;
-    			minCost = cost;
+		rows.push(j);
+		bookedSoFar += row.emptySeats;
+		
+		if (bookedSoFar >= seatCount) {
+    			break;
 		}
-
-    		// Reseting the state so we can try another case
-		rows = [];
-    		bookedSoFar = 0;
+    	}
+    	
+    	if (bookedSoFar < seatCount) {
+        	break;
+    	}
+    	
+	let cost = this.getRowCost(rows);
+	if (cost < minCost) {
+    		bestRows = rows;
+    		minCost = cost;
 	}
     }
-    
 
-    bookedSoFar = 0;
+    let bookedSoFar = 0;
+    let bookedSeats = [];
+
     for (let i=0; i<bestRows.length; i++) {
         let rowIndex = bestRows[i];
         let row = this.coach.rows[rowIndex];
         let toBook = Math.min(seatCount-bookedSoFar, row.emptySeats);
+
+        /* Figuring out seat numbers*/
+        let filledSeats = row.totalSeats - row.emptySeats;
+    	for (let i=0; i<toBook; i++) {
+		bookedSeats.push(rowIndex*maxColumns + i + filledSeats);
+    	}
+
         row.emptySeats -= toBook;
         bookedSoFar += toBook;
     }
-   
-    return bestRows;
+    this.recentlyBooked = bookedSeats;
+    this.seatsBookedCount += seatCount;
   }
 }
 
