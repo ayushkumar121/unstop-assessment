@@ -12,16 +12,16 @@
     <span class="green"></span> Recently Booked
     <span class="red"></span> Previously Booked
   </p>
-  <div class="seats">
-    <div *ngFor="let seat of seats; let i = index" class="seat">
-      <span
-        [ngClass]="{
-          booked: seat === 1,
-          'recently-booked': isRecentBooking(i)
-        }"
-      >
-        {{ i }}
-      </span>
+  <div class="coach">
+    <div *ngFor="let row of coach.rows; let i = index" class="row">
+	<div *ngFor="let f of [].constructor(row.totalSeats); let j = index" class="seat">
+    		<span
+		[ngClass]="{
+		'booked': (j+1) <= row.totalSeats - row.emptySeats
+		}"
+    		>{{i * row.totalSeats + j}}
+    		</span>
+	</div>
     </div>
   </div>
 </div>
